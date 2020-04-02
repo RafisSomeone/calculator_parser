@@ -242,29 +242,24 @@ def get_name(key):
     return names[key]
 
 
-def p_nextexpr(p):
-    '''nextexpression : expression OPERATOR
-                      | expression OPERATOR nextexpression'''
-    if len(p) == 3:
-        p[0] = (p[2], p[1])
-    else:
-        p[0] = (p[3], (p[2], p[1]))
+def p_subexpr(p):
+    "subexpression : variable expression OPERATOR"
+    p[0] = (p[3], p[1], p[2])
+
+
+def p_subexpr_right(p):
+    "subexpression : subexpression expression OPERATOR"
+    p[0] = (p[3], p[1], p[2])
+
+
+def p_subexpr_double(p):
+    "subexpression : subexpression subexpression OPERATOR"
+    p[0] = (p[3], p[1], p[2])
 
 
 def p_expression_sub(p):
     '''expression : subexpression'''
     p[0] = p[1]
-
-
-def p_expression_all(p):
-    '''expression : subexpression nextexpression'''
-    p[0] = (p[2][0], p[1], p[2][1])
-    # p[0] = p[2][0](p[1], p[2][1])
-
-
-def p_subexpr(p):
-    "subexpression : variable expression OPERATOR"
-    p[0] = (p[3], p[1], p[2])
 
 
 def p_expression_number(p):
